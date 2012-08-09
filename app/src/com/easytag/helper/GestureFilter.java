@@ -105,9 +105,9 @@ public class GestureFilter extends SimpleOnGestureListener {
 			event.setAction(MotionEvent.ACTION_CANCEL);
 		else if(this.mode == MODE_DYNAMIC){
 			if(event.getAction() == MotionEvent.ACTION_DOWN)
-				listener.onHold();
+				listener.onHold(event);
 			else if(event.getAction() == MotionEvent.ACTION_UP)
-				listener.onRelease();
+				listener.onRelease(event);
 			else if(event.getAction() == MotionEvent.ACTION_MOVE)
 				listener.onMove(event);
 			

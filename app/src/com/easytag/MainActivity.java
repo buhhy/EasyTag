@@ -71,20 +71,17 @@ public class MainActivity extends Activity implements GestureListener {
 		}
 	}
 
-	public void onHold(){
+	public void onHold(MotionEvent event){
+		this.setTokenLocation(((Float)event.getX()).intValue(), ((Float)event.getY()).intValue());
 		this.showDashboard();
 	}
 
-	public void onRelease(){
+	public void onRelease(MotionEvent event){
 		this.hideDashboard();
 	}
 
 	public void onMove(MotionEvent event){
-		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		lp.setMargins(
-				((Float)event.getX()).intValue() - this.token.getWidth()/2,
-				((Float)event.getY()).intValue() - this.token.getHeight()/2, 0, 0);
-		this.token.setLayoutParams(lp);
+		this.setTokenLocation(((Float)event.getX()).intValue(), ((Float)event.getY()).intValue());
 	}
 
 	public void onDoubleTap(){
@@ -181,16 +178,14 @@ public class MainActivity extends Activity implements GestureListener {
 			view.setVisibility(View.INVISIBLE);
 		}
 	}
-
-	//	public void alert(String message){
-	//		Toast toast = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT);
-	//		toast.show();
-	//	}
-	//
-	//	public void highlight(int x, int y){
-	//		TextView view = ((TextView) this.boxView[y][x]);
-	//		view.setShadowLayer(10.0f, 0.0f, 0.0f, 0xffff0000);
-	//	}
+	
+	private void setTokenLocation(int x, int y){
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		lp.setMargins(
+				x - this.token.getWidth()/2,
+				y - this.token.getHeight(), 0, 0);
+		this.token.setLayoutParams(lp);
+	}
 
 	private Drawable LoadImageFromWebOperations(String url){
 		try {

@@ -92,8 +92,8 @@ public class MainActivity extends Activity implements GestureListener {
 		StrictMode.setThreadPolicy(tp);
 		
 		Model model = this.getModel();
-		model.fetchImages();
 		model.fetchTags();
+//		model.fetchImages();
 
 		this.dashboard = new View[3];
 		this.tagTexts = new TextView[3];
@@ -110,9 +110,6 @@ public class MainActivity extends Activity implements GestureListener {
 		this.tagTexts[2] = (TextView) this.findViewById(R.id.tag13);
 		
 		this.filter = new GestureFilter(this, this);
-		
-		this.rerenderImage();
-		this.rerenderTags();
 	}
 
 	@Override
@@ -125,6 +122,14 @@ public class MainActivity extends Activity implements GestureListener {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
+	}
+	
+	public void onUpdateTags(){
+		this.rerenderTags();
+	}
+	
+	public void onUpdateImage(){
+		this.rerenderImage();
 	}
 	
 	public void rerenderImage(){
@@ -152,7 +157,7 @@ public class MainActivity extends Activity implements GestureListener {
 
 	public Model getModel(){
 		if(this.tagModel == null)
-			this.tagModel = new Model();
+			this.tagModel = new Model(this);
 		return this.tagModel;
 	}
 

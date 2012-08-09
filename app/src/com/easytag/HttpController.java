@@ -16,16 +16,15 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-
-import com.easytag.helper.AsyncCallback;
-import com.easytag.model.Model;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class HttpController extends AsyncTask<URL, Integer, String>  {
+import com.easytag.helper.AsyncCallback;
+import com.easytag.model.Image;
+import com.easytag.model.Tag;
+
+public class HttpController extends AsyncTask<URL, Integer, Object> {
 
 	public enum RequestMethod {
 		 GET, POST
@@ -33,13 +32,15 @@ public class HttpController extends AsyncTask<URL, Integer, String>  {
 	private HttpClient httpclient;
 	private RequestMethod requestMethod;
 	private List<NameValuePair> postArgs;
+	private MainActivity listener;
 	
 	public AsyncCallback caller;
 	
-	public HttpController() {
+	public HttpController(MainActivity listener) {
 		this.httpclient = new DefaultHttpClient();
 		this.requestMethod = RequestMethod.GET;
 		this.postArgs = new ArrayList<NameValuePair>();
+		this.listener = listener;
 	}
 
 	public void setPostArgs(List<NameValuePair> postArgs) {	
@@ -105,7 +106,7 @@ public class HttpController extends AsyncTask<URL, Integer, String>  {
 	}
 
 	@Override
-	protected String doInBackground(URL... arg0) {
+	protected Object doInBackground(URL... arg0) {
 		String result = "";
 		try { 
 			if (this.requestMethod == RequestMethod.GET) {
@@ -118,7 +119,7 @@ public class HttpController extends AsyncTask<URL, Integer, String>  {
 					result += this.httpPost(u.toString(), this.postArgs);
 				}
 			}
-			caller.call(result);
+			return caller.call(result);
 		}
 		catch ( ClientProtocolException exc ) {
 			Log.e("test", "client protocol exception");
@@ -135,6 +136,13 @@ public class HttpController extends AsyncTask<URL, Integer, String>  {
 			Log.e("test","FUCKCCKCKCKCKCKCK");
 		}
 		return null;
+	}
+	
+	protected void onPostExecute(Object result){
+		if(result instanceof Tag)
+			listener.onUpdateTags();
+		else if(result instanceof Image)
+			listener.onUpdateImage();
 	}
 
 }

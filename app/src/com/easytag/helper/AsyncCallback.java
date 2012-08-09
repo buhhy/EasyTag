@@ -1,5 +1,11 @@
 package com.easytag.helper;
 
-public class AsyncCallback {
-	public void call(String result) {};
+public abstract class AsyncCallback {
+	protected Object model;
+	
+	public AsyncCallback(Object model){
+		this.model = model;
+	}
+	
+	public abstract Object call(String result);
 } 

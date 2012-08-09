@@ -1,5 +1,12 @@
 package com.easytag;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+import org.apache.http.client.ClientProtocolException;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +25,7 @@ public class MainActivity extends Activity implements GestureListener {
 	private Model tagModel = null;
 	private GestureFilter filter = null;
 	private View [][] boxView = null;
-
+	
 	public void onSwipe(int direction){
 		int x = 1;
 //		int y = 1;

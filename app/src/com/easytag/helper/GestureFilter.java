@@ -109,7 +109,7 @@ public class GestureFilter extends SimpleOnGestureListener {
 			else if(event.getAction() == MotionEvent.ACTION_UP)
 				listener.onRelease();
 			else if(event.getAction() == MotionEvent.ACTION_MOVE)
-				listener.onMove();
+				listener.onMove(event);
 			
 			if(event.getAction() == ACTION_FAKE)
 				event.setAction(MotionEvent.ACTION_UP);

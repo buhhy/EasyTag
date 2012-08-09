@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.easytag.helper.GestureFilter;
@@ -29,13 +30,14 @@ public class MainActivity extends Activity implements GestureListener {
 	private GestureFilter filter = null;
 	private View [] dashboard = null;
 	private ImageView mainImage = null;
+	private ImageView token = null;
 	private LinearLayout infoBar = null;
 	private LinearLayout tagBar = null;
 	private TextView[] tagTexts = null;
-	
+
 	public void onSwipe(int direction){
 		int x = 1;
-//		int y = 1;
+		//		int y = 1;
 
 		Model model = this.getModel();
 
@@ -44,10 +46,10 @@ public class MainActivity extends Activity implements GestureListener {
 		else if(GestureFilter.CHECK_DIRECTION(direction, GestureFilter.SWIPE_RIGHT))
 			x = 2;
 
-//		if(GestureFilter.CHECK_DIRECTION(direction, GestureFilter.SWIPE_UP))
-//			y = 0;
-//		else if(GestureFilter.CHECK_DIRECTION(direction, GestureFilter.SWIPE_DOWN))
-//			y = 2;
+		//		if(GestureFilter.CHECK_DIRECTION(direction, GestureFilter.SWIPE_UP))
+		//			y = 0;
+		//		else if(GestureFilter.CHECK_DIRECTION(direction, GestureFilter.SWIPE_DOWN))
+		//			y = 2;
 
 		if(direction != 0){
 			if(GestureFilter.CHECK_DIRECTION(direction, GestureFilter.SWIPE_DOWN)){
@@ -77,38 +79,46 @@ public class MainActivity extends Activity implements GestureListener {
 		this.hideDashboard();
 	}
 
-	public void onMove(){
+	public void onMove(MotionEvent event){
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		lp.setMargins(
+				((Float)event.getX()).intValue() - this.token.getWidth()/2,
+				((Float)event.getY()).intValue() - this.token.getHeight()/2, 0, 0);
+		this.token.setLayoutParams(lp);
 	}
 
 	public void onDoubleTap(){
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		ThreadPolicy tp = ThreadPolicy.LAX;
 		StrictMode.setThreadPolicy(tp);
-		
+
 		Model model = this.getModel();
 		model.fetchTags();
-//		model.fetchImages();
+		model.fetchImages();
 
-		this.dashboard = new View[3];
+		this.dashboard = new View[4];
 		this.tagTexts = new TextView[3];
-		this.mainImage = (ImageView)this.findViewById(R.id.image);
+
+		this.token = (ImageView) this.findViewById(R.id.token);
+		this.mainImage = (ImageView) this.findViewById(R.id.image);
 		this.infoBar = (LinearLayout) this.findViewById(R.id.infoBar);
 		this.tagBar = (LinearLayout) this.findViewById(R.id.tagBar1);
 
 		this.dashboard[0] = this.findViewById(R.id.skipButton);
 		this.dashboard[1] = this.findViewById(R.id.previousSet);
 		this.dashboard[2] = this.findViewById(R.id.nextSet);
-		
+		this.dashboard[3] = this.token;
+
 		this.tagTexts[0] = (TextView) this.findViewById(R.id.tag11);
 		this.tagTexts[1] = (TextView) this.findViewById(R.id.tag12);
 		this.tagTexts[2] = (TextView) this.findViewById(R.id.tag13);
-		
+
 		this.filter = new GestureFilter(this, this);
 	}
 
@@ -123,30 +133,30 @@ public class MainActivity extends Activity implements GestureListener {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-	
+
 	public void onUpdateTags(){
 		this.rerenderTags();
 	}
-	
+
 	public void onUpdateImage(){
 		this.rerenderImage();
 	}
-	
+
 	public void rerenderImage(){
 		Model model = this.getModel();
 		Image currentImage = model.getCurrentImage();
 		Log.d("image", model.getCurrentImage().toString());
-		
+
 		Drawable drawable = this.LoadImageFromWebOperations(currentImage.getImageUrl());
 		if(drawable != null)
 			this.mainImage.setImageDrawable(drawable);
 	}
-	
+
 	public void rerenderTags(){
 		Model model = this.getModel();
 		List<Tag> currentTags = model.getCurrentTagSet();
 		Log.d("tags", model.getCurrentTagSet().toString());
-		
+
 		for(int i = 0; i < this.tagTexts.length; i++){
 			if(i < currentTags.size())
 				tagTexts[i].setText(currentTags.get(i).getName());
@@ -162,9 +172,8 @@ public class MainActivity extends Activity implements GestureListener {
 	}
 
 	public void showDashboard(){
-		for(View view : this.dashboard){
+		for(View view : this.dashboard)
 			view.setVisibility(View.VISIBLE);
-		}
 	}
 
 	public void hideDashboard(){
@@ -173,26 +182,26 @@ public class MainActivity extends Activity implements GestureListener {
 		}
 	}
 
-//	public void alert(String message){
-//		Toast toast = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT);
-//		toast.show();
-//	}
-//
-//	public void highlight(int x, int y){
-//		TextView view = ((TextView) this.boxView[y][x]);
-//		view.setShadowLayer(10.0f, 0.0f, 0.0f, 0xffff0000);
-//	}
-	
+	//	public void alert(String message){
+	//		Toast toast = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT);
+	//		toast.show();
+	//	}
+	//
+	//	public void highlight(int x, int y){
+	//		TextView view = ((TextView) this.boxView[y][x]);
+	//		view.setShadowLayer(10.0f, 0.0f, 0.0f, 0xffff0000);
+	//	}
+
 	private Drawable LoadImageFromWebOperations(String url){
- 		try {
- 			InputStream is = (InputStream) new URL(url).getContent();
- 			Drawable d = Drawable.createFromStream(is, "src name");
- 			return d;
- 		}
- 		catch(Exception e){
- 			e.printStackTrace();
- 			return null;
- 		}
- 	}
+		try {
+			InputStream is = (InputStream) new URL(url).getContent();
+			Drawable d = Drawable.createFromStream(is, "src name");
+			return d;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 }

@@ -139,9 +139,9 @@ public class HttpController extends AsyncTask<URL, Integer, Object> {
 	}
 	
 	protected void onPostExecute(Object result){
-		if(result instanceof Tag)
+		if(result == Tag.class)
 			listener.onUpdateTags();
-		else if(result instanceof Image)
+		else if(result == Image.class)
 			listener.onUpdateImage();
 	}
 

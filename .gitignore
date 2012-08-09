@@ -1,0 +1,5 @@
+/app/.classpath
+/app/.project
+/app\.settings/org.eclipse.jdt.core.prefs
+/app/bin/**
+/app/gen/**

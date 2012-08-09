@@ -118,7 +118,7 @@ public class Model {
 			Log.d("save", tag.getName() + ": " + this.getCurrentImage().getImageUrl());
 		} catch (MalformedURLException exception) {
 			Log.e("test", exception.toString());
-		}		
+		}
 		// TODO: save tag-image link using currentImage and tag.getTagId()
 	}
 

@@ -2,33 +2,33 @@ package com.easytag.model;
 
 public class Image {
 
-	private int id;
-	private String img_path;
+	private int imageId;
+	private String imageUrl;
 	
 	public Image(int imageId, String imageUrl){
-		this.id = imageId;
-		this.img_path = imageUrl;
+		this.imageId = imageId;
+		this.imageUrl = imageUrl;
 	}
 	
 	@Override
 	public String toString(){
-		return String.format("id: %d, url: %s", this.id, this.img_path);
+		return String.format("id: %d, url: %s", this.imageId, this.imageUrl);
 	}
 	
-	public int getId(){
-		return id;
+	public int getImageId(){
+		return imageId;
 	}
 	
-	public void setId(int imageId){
-		this.id = imageId;
+	public void setImageId(int imageId){
+		this.imageId = imageId;
 	}
 	
 	public String getImageUrl(){
-		return img_path;
+		return imageUrl;
 	}
 	
 	public void setImageUrl(String imageUrl){
-		this.img_path = imageUrl;
+		this.imageUrl = imageUrl;
 	}
 	
 }

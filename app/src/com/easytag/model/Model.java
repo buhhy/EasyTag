@@ -3,6 +3,8 @@ package com.easytag.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.util.Log;
+
 public class Model {
 	
 	public static final int NUM_TAG_PER_PAGE = 3;
@@ -10,8 +12,8 @@ public class Model {
 	private List<Image> imageList;
 	private List<Tag> tagList;
 	
-	private int currentImage = 0;
-	private int currentTagSet = 0;
+	private int currentIndexIndex = 0;
+	private int currentTagSetIndex = 0;
 	
 	public List<Image> getImageList(){
 		if(this.imageList == null)
@@ -26,68 +28,80 @@ public class Model {
 	}
 	
 	public void fetchTags(){
+		List<Tag> list = this.getTagList();
+		list.add(new Tag(1, "1"));
+		list.add(new Tag(2, "2"));
+		list.add(new Tag(3, "3"));
+		list.add(new Tag(4, "4"));
+		list.add(new Tag(5, "5"));
+		list.add(new Tag(6, "6"));
+		list.add(new Tag(7, "7"));
 		// TODO: add tag fetching
 	}
 	
 	public void fetchImages(){
+		List<Image> list = this.getImageList();
+		list.add(new Image(1, "a"));
+		list.add(new Image(2, "b"));
+		list.add(new Image(3, "c"));
+		list.add(new Image(4, "d"));
+		list.add(new Image(5, "e"));
+		list.add(new Image(6, "f"));
+		list.add(new Image(7, "g"));
+		list.add(new Image(8, "h"));
 		// TODO: add image fetching
 	}
 	
 	public void tagImage(int tagIndex){
-		Tag tag = tagList.get(tagIndex);
+		Tag tag = tagList.get(this.currentTagSetIndex * Model.NUM_TAG_PER_PAGE + tagIndex);
+		Log.d("save", tag.getTagName() + ": " + this.getCurrentImage().getImageUrl());
 		// TODO: save tag-image link using currentImage and tag.getTagId()
 	}
 
 	public Image getCurrentImage(){
-		return this.getImageList().get(currentImage);
+		return this.getImageList().get(currentIndexIndex);
 	}
 
-	public void incrementImageIndex(){
+	public void nextImage(){
 		if(this.hasNextImage())
-			this.currentImage ++;
+			this.currentIndexIndex ++;
 	}
 	
-	public void decrementImageIndex(){
-		if(this.currentImage > 0)
-			this.currentImage --;
+	public void previousImage(){
+		if(this.currentIndexIndex > 0)
+			this.currentIndexIndex --;
 	}
 	
 	public boolean hasNextImage(){
-		return this.currentImage == this.imageList.size() - 1;
+		return (this.currentIndexIndex < this.imageList.size() - 1);
 	}
 
 	public List<Tag> getCurrentTagSet(){
 		List<Tag> list = this.getTagList();
-		int start = this.currentTagSet * Model.NUM_TAG_PER_PAGE;
-		int end = (this.currentTagSet + 1) * Model.NUM_TAG_PER_PAGE;
+		int start = this.currentTagSetIndex * Model.NUM_TAG_PER_PAGE;
+		int end = (this.currentTagSetIndex + 1) * Model.NUM_TAG_PER_PAGE;
 		if(end > list.size())
 			end = list.size();
 		
-		return list.subList(
-				start,
-				end);
+		return list.subList(start, end);
 	}
 
-	public void setCurrentTagSet(int currentTagSet){
-		this.currentTagSet = currentTagSet;
-	}
-
-	public void incrementTagSetIndex(){
+	public void nextTagSet(){
 		if(this.hasNextTagSet())
-			this.currentTagSet ++;
+			this.currentTagSetIndex ++;
 	}
 	
-	public void decrementTagSetIndex(){
+	public void previousTagSet(){
 		if(this.hasPreviousTagSet())
-			this.currentTagSet --;
+			this.currentTagSetIndex --;
 	}
 	
 	public boolean hasNextTagSet(){
-		return this.currentTagSet * Model.NUM_TAG_PER_PAGE < this.tagList.size() - 1;
+		return (this.currentTagSetIndex * Model.NUM_TAG_PER_PAGE < this.tagList.size() - 1);
 	}
 	
 	public boolean hasPreviousTagSet(){
-		return this.currentTagSet > 0;
+		return this.currentTagSetIndex > 0;
 	}
 	
 }

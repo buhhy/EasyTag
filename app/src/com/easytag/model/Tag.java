@@ -5,6 +5,16 @@ public class Tag {
 	private int tagId;
 	private String tagName;
 	
+	public Tag(int tagId, String tagName){
+		this.tagId = tagId;
+		this.tagName = tagName;
+	}
+	
+	@Override
+	public String toString(){
+		return String.format("id: %d, name: %s", this.tagId, this.tagName);
+	}
+	
 	public int getTagId(){
 		return tagId;
 	}

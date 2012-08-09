@@ -52,17 +52,11 @@ public class Model {
 	public void addTag(Tag tag){
 		this.getTagList().add(tag);
 	}
-
+	public void addImage(Image img){
+		this.getImageList().add(img);
+	}
+	
 	public void fetchTags() {
-		//		List<Tag> list = this.getTagList();
-		//		list.add(new Tag(1, "1"));
-		//		list.add(new Tag(2, "2"));
-		//		list.add(new Tag(3, "3"));
-		//		list.add(new Tag(4, "4"));
-		//		list.add(new Tag(5, "5"));
-		//		list.add(new Tag(6, "6"));
-		//		list.add(new Tag(7, "7"));
-
 		try {
 			hc.caller = (new AsyncCallback(this) {
 				public Object call(String result) {
@@ -77,11 +71,9 @@ public class Model {
 		} catch (MalformedURLException exception) {
 			Log.e("test", exception.toString());
 		}
-
-		//Need to know how tagged results are returned
 	}
 
-	public void fetchImages(){
+	public void fetchImages(int amount){
 		//		List<Image> list = this.getImageList();
 		//		list.add(new Image(1, "http://www.formorf.com/adad/wordpress/wp-content/uploads/2010/07/cell-mutation1.jpg"));
 		//		list.add(new Image(2, "http://fc01.deviantart.net/fs4/i/2004/230/2/f/Simple_Cell_Mutation.jpg"));
@@ -92,25 +84,43 @@ public class Model {
 		//		list.add(new Image(7, "http://i2.cdn.turner.com/si/2012/olympics/2012/writers/sl_price/08/07/Liu-Xiang/Liu-Xiang-1.jpg"));
 		//		list.add(new Image(8, "http://static.guim.co.uk/sys-images/Sport/Pix/pictures/2012/8/7/1344334848032/Liu-Xiang--008.jpg"));
 
-		String result = "";
 		try {
-			hc.execute(new URL("http://sleepy-cove-3041.herokuapp.com/content-tagss/tag/2/content/3.json"));;
-			result = hc.get().toString();
+			hc.caller = (new AsyncCallback(this) {
+				public Object call(String result) {
+					Model model = (Model) this.model;
+					List<StringMap<Object>> mapList = gson.fromJson(result, List.class);
+					for(StringMap<Object> s : mapList)
+						model.addImage(new Image(((Double) s.get("id")).intValue(), s.get("img_path").toString()));
+					return Tag.class;
+				}
+			});
+			for (int i = 0; i < amount; i++) {
+				hc.execute(new URL("http://sleepy-cove-3041.herokuapp.com/getNextContent/" + i + ".json"));
+			}
 		} catch (MalformedURLException exception) {
-			Log.e("test", exception.toString());
-		} catch (InterruptedException exception) {
-			Log.e("test", exception.toString());
-		} catch (ExecutionException exception) {
 			Log.e("test", exception.toString());
 		}
 	}
+	
+	public void tagImage(int contentId, int photoId){
+		try {
+			hc.caller = (new AsyncCallback(this) {
+				public Object call(String result) {
+					Model model = (Model) this.model;
+					List<StringMap<Object>> mapList = gson.fromJson(result, List.class);
+					for(StringMap<Object> s : mapList)
+						model.addImage(new Image(((Double) s.get("id")).intValue(), s.get("img_path").toString()));
+					return Tag.class;
+				}
+			});
+			int tagIndex = this.currentTagSetIndex * Model.NUM_TAG_PER_PAGE;
+			hc.execute(new URL("http://sleepy-cove-3041.herokuapp.com/tagPhoto/" + tagIndex + "/" + this.currentImageIndex));
+			Tag tag = tagList.get(tagIndex);
+			Log.d("save", tag.getName() + ": " + this.getCurrentImage().getImageUrl());
+		} catch (MalformedURLException exception) {
+			Log.e("test", exception.toString());
+		}		
 
-	public void processImages(String result) {
-	}
-
-	public void tagImage(int tagIndex){
-		Tag tag = tagList.get(this.currentTagSetIndex * Model.NUM_TAG_PER_PAGE + tagIndex);
-		Log.d("save", tag.getName() + ": " + this.getCurrentImage().getImageUrl());
 		// TODO: save tag-image link using currentImage and tag.getTagId()
 	}
 

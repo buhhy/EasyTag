@@ -39,15 +39,22 @@ public class GestureFilter extends SimpleOnGestureListener {
 		if(!this.running)
 			return;  
 
-		boolean result = this.detector.onTouchEvent(event); 
-
+		boolean result = this.detector.onTouchEvent(event);
 		if(this.mode == MODE_SOLID)
 			event.setAction(MotionEvent.ACTION_CANCEL);
-		else if (this.mode == MODE_DYNAMIC){
-			if(event.getAction() == ACTION_FAKE) 
+		else if(this.mode == MODE_DYNAMIC){
+			Log.d("mode", event.getAction()+"v");
+			if(event.getAction() == MotionEvent.ACTION_DOWN)
+				listener.onHold();
+			else if(event.getAction() == MotionEvent.ACTION_UP)
+				listener.onRelease();
+			else if(event.getAction() == MotionEvent.ACTION_MOVE)
+				listener.onMove();
+			
+			if(event.getAction() == ACTION_FAKE)
 				event.setAction(MotionEvent.ACTION_UP);
-			else if (result)
-				event.setAction(MotionEvent.ACTION_CANCEL); 
+			else if(result)
+				event.setAction(MotionEvent.ACTION_CANCEL);
 			else if(this.tapIndicator){
 				event.setAction(MotionEvent.ACTION_DOWN);
 				this.tapIndicator = false;
@@ -143,11 +150,10 @@ public class GestureFilter extends SimpleOnGestureListener {
 
 	@Override
 	public boolean onSingleTapConfirmed(MotionEvent arg0){
-
 		if(this.mode == MODE_DYNAMIC){        // we owe an ACTION_UP, so we fake an
 			arg0.setAction(ACTION_FAKE);      //action which will be converted to an ACTION_UP later.
 			this.context.dispatchTouchEvent(arg0);  
-		}   
+		}
 
 		return false;
 	}

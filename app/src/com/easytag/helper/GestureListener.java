@@ -1,6 +1,9 @@
 package com.easytag.helper;
 
 public interface GestureListener {
-	void onSwipe(int direction);
-	void onDoubleTap();
+	public void onDoubleTap();
+	public void onHold();
+	public void onRelease();
+	public void onSwipe(int direction);
+	public void onMove();
 }

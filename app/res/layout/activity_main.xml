@@ -1,14 +1,99 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_world"
-        tools:context=".MainActivity" />
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="match_parent"
+        android:minHeight="75dp" >
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/box00"
+            android:layout_width="75dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="10pt"
+            android:text="tl" >
+        </TextView>
+        <TextView
+            android:id="@+id/box01"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="10pt"
+            android:text="t" >
+        </TextView>
+        <TextView
+            android:id="@+id/box02"
+            android:layout_width="75dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="10pt"
+            android:text="tr" >
+        </TextView>
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow2"
+        android:layout_width="match_parent"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/box10"
+            android:layout_width="75dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="10pt"
+            android:text="l" >
+        </TextView>
+
+        <ImageView
+            android:id="@+id/box11"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@android:drawable/gallery_thumb" />
+
+        <TextView
+            android:id="@+id/box12"
+            android:layout_width="75dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="10pt"
+            android:text="r" >
+        </TextView>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="match_parent"
+        android:minHeight="75dp" >
+
+        <TextView
+            android:id="@+id/box20"
+            android:layout_width="75dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="10pt"
+            android:text="bl" >
+        </TextView>
+        <TextView
+            android:id="@+id/box21"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="10pt"
+            android:text="b" >
+        </TextView>
+        <TextView
+            android:id="@+id/box22"
+            android:layout_width="75dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="10pt"
+            android:text="br" >
+        </TextView>
+    </TableRow>
+
+</TableLayout>

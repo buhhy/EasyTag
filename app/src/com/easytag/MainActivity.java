@@ -1,5 +1,12 @@
 package com.easytag;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+import org.apache.http.client.ClientProtocolException;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -22,7 +29,14 @@ public class MainActivity extends Activity implements GestureListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+		HttpController hc = new HttpController();
+		try {
+			hc.execute(new URL("http://www.teamliquid.net"));
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		this.tagModel = new Model();
 		this.boxView = new View[3][3];
 		

@@ -144,7 +144,7 @@ public class MainActivity extends Activity implements GestureListener {
 		
 		for(int i = 0; i < this.tagTexts.length; i++){
 			if(i < currentTags.size())
-				tagTexts[i].setText(currentTags.get(i).getTagName());
+				tagTexts[i].setText(currentTags.get(i).getName());
 			else
 				tagTexts[i].setText("");
 		}

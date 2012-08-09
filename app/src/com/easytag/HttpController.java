@@ -17,11 +17,15 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+
+import com.easytag.helper.AsyncCallback;
+import com.easytag.model.Model;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class HttpController extends AsyncTask<URL, Integer, Long>  {
+public class HttpController extends AsyncTask<URL, Integer, String>  {
 
 	public enum RequestMethod {
 		 GET, POST
@@ -29,7 +33,9 @@ public class HttpController extends AsyncTask<URL, Integer, Long>  {
 	private HttpClient httpclient;
 	private RequestMethod requestMethod;
 	private List<NameValuePair> postArgs;
-
+	
+	public AsyncCallback caller;
+	
 	public HttpController() {
 		this.httpclient = new DefaultHttpClient();
 		this.requestMethod = RequestMethod.GET;
@@ -76,7 +82,7 @@ public class HttpController extends AsyncTask<URL, Integer, Long>  {
 		    return result;
 	}
 
-	public void httpPost(String url, List<NameValuePair> args) throws ClientProtocolException, IOException, URISyntaxException {
+	public String httpPost(String url, List<NameValuePair> args) throws ClientProtocolException, IOException, URISyntaxException {
 		HttpGet httppost = new HttpGet(url);
 		HttpResponse response = null;
 		((HttpResponse) httppost).setEntity(new UrlEncodedFormEntity(args));
@@ -84,9 +90,10 @@ public class HttpController extends AsyncTask<URL, Integer, Long>  {
 		Log.v("test", "POST request successfully executed");
 		String result = readResponse(response);
 		Log.v("test", result);
+		return result;
 	}
 
-	public void httpGet(String url) throws ClientProtocolException, IOException, URISyntaxException {
+	public String httpGet(String url) throws ClientProtocolException, IOException, URISyntaxException {
 		HttpGet httpget = new HttpGet();
 		httpget.setURI(new URI(url));
 		HttpResponse response = null;
@@ -94,21 +101,24 @@ public class HttpController extends AsyncTask<URL, Integer, Long>  {
 		Log.v("test", "GET request successfully executed");
 		String result = readResponse(response);
 		Log.v("test", result);
+		return result;
 	}
 
 	@Override
-	protected Long doInBackground(URL... arg0) {
-		try {
+	protected String doInBackground(URL... arg0) {
+		String result = "";
+		try { 
 			if (this.requestMethod == RequestMethod.GET) {
 				for (URL u : arg0) {
-					this.httpGet(u.toString());
+					result += this.httpGet(u.toString());
 				}
 			}
 			else if (this.requestMethod == RequestMethod.POST) {
 				for (URL u : arg0) {
-					this.httpPost(u.toString(), this.postArgs);
+					result += this.httpPost(u.toString(), this.postArgs);
 				}
 			}
+			caller.call(result);
 		}
 		catch ( ClientProtocolException exc ) {
 			Log.e("test", "client protocol exception");
@@ -126,4 +136,5 @@ public class HttpController extends AsyncTask<URL, Integer, Long>  {
 		}
 		return null;
 	}
+
 }

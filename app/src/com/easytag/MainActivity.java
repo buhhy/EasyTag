@@ -1,30 +1,37 @@
 package com.easytag;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
 import java.net.URL;
-
-import org.apache.http.client.ClientProtocolException;
+import java.util.List;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.os.StrictMode.ThreadPolicy;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.easytag.helper.GestureFilter;
 import com.easytag.helper.GestureListener;
+import com.easytag.model.Image;
 import com.easytag.model.Model;
+import com.easytag.model.Tag;
 
 public class MainActivity extends Activity implements GestureListener {
 
 	private Model tagModel = null;
 	private GestureFilter filter = null;
-	private View [][] boxView = null;
+	private View [] dashboard = null;
+	private ImageView mainImage = null;
+	private LinearLayout infoBar = null;
+	private LinearLayout tagBar = null;
+	private TextView[] tagTexts = null;
 	
 	public void onSwipe(int direction){
 		int x = 1;
@@ -43,17 +50,22 @@ public class MainActivity extends Activity implements GestureListener {
 //			y = 2;
 
 		if(direction != 0){
-			if(GestureFilter.CHECK_DIRECTION(direction, GestureFilter.SWIPE_DOWN))
+			if(GestureFilter.CHECK_DIRECTION(direction, GestureFilter.SWIPE_DOWN)){
 				model.nextImage();
-			else if(GestureFilter.CHECK_DIRECTION(direction, GestureFilter.SWIPE_UP))
+				this.rerenderImage();
+			}
+			else if(GestureFilter.CHECK_DIRECTION(direction, GestureFilter.SWIPE_UP)){
 				model.tagImage(x);
+				model.nextImage();
+				this.rerenderImage();
+			}
 			else {
 				if(x == 0)
 					model.previousTagSet();
 				else
 					model.nextTagSet();
+				this.rerenderTags();
 			}
-			this.rerender();
 		}
 	}
 
@@ -76,23 +88,31 @@ public class MainActivity extends Activity implements GestureListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		ThreadPolicy tp = ThreadPolicy.LAX;
+		StrictMode.setThreadPolicy(tp);
+		
 		Model model = this.getModel();
 		model.fetchImages();
 		model.fetchTags();
 
-		this.boxView = new View[3][3];
+		this.dashboard = new View[3];
+		this.tagTexts = new TextView[3];
+		this.mainImage = (ImageView)this.findViewById(R.id.image);
+		this.infoBar = (LinearLayout) this.findViewById(R.id.infoBar);
+		this.tagBar = (LinearLayout) this.findViewById(R.id.tagBar1);
 
-		this.boxView[0][0] = this.findViewById(R.id.box00);
-		this.boxView[0][1] = this.findViewById(R.id.box01);
-		this.boxView[0][2] = this.findViewById(R.id.box02);
-		this.boxView[1][0] = this.findViewById(R.id.box10);
-		this.boxView[1][1] = this.findViewById(R.id.box11);
-		this.boxView[1][2] = this.findViewById(R.id.box12);
-		this.boxView[2][0] = this.findViewById(R.id.box20);
-		this.boxView[2][1] = this.findViewById(R.id.box21);
-		this.boxView[2][2] = this.findViewById(R.id.box22);
-
+		this.dashboard[0] = this.findViewById(R.id.skipButton);
+		this.dashboard[1] = this.findViewById(R.id.previousSet);
+		this.dashboard[2] = this.findViewById(R.id.nextSet);
+		
+		this.tagTexts[0] = (TextView) this.findViewById(R.id.tag11);
+		this.tagTexts[1] = (TextView) this.findViewById(R.id.tag12);
+		this.tagTexts[2] = (TextView) this.findViewById(R.id.tag13);
+		
 		this.filter = new GestureFilter(this, this);
+		
+		this.rerenderImage();
+		this.rerenderTags();
 	}
 
 	@Override
@@ -107,10 +127,27 @@ public class MainActivity extends Activity implements GestureListener {
 		return true;
 	}
 	
-	public void rerender(){
+	public void rerenderImage(){
 		Model model = this.getModel();
-		Log.d("tags", model.getCurrentTagSet().toString());
+		Image currentImage = model.getCurrentImage();
 		Log.d("image", model.getCurrentImage().toString());
+		
+		Drawable drawable = this.LoadImageFromWebOperations(currentImage.getImageUrl());
+		if(drawable != null)
+			this.mainImage.setImageDrawable(drawable);
+	}
+	
+	public void rerenderTags(){
+		Model model = this.getModel();
+		List<Tag> currentTags = model.getCurrentTagSet();
+		Log.d("tags", model.getCurrentTagSet().toString());
+		
+		for(int i = 0; i < this.tagTexts.length; i++){
+			if(i < currentTags.size())
+				tagTexts[i].setText(currentTags.get(i).getTagName());
+			else
+				tagTexts[i].setText("");
+		}
 	}
 
 	public Model getModel(){
@@ -120,21 +157,37 @@ public class MainActivity extends Activity implements GestureListener {
 	}
 
 	public void showDashboard(){
-
+		for(View view : this.dashboard){
+			view.setVisibility(View.VISIBLE);
+		}
 	}
 
 	public void hideDashboard(){
-
+		for(View view : this.dashboard){
+			view.setVisibility(View.INVISIBLE);
+		}
 	}
 
-	public void alert(String message){
-		Toast toast = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT);
-		toast.show();
-	}
-
-	public void highlight(int x, int y){
-		TextView view = ((TextView) this.boxView[y][x]);
-		view.setShadowLayer(10.0f, 0.0f, 0.0f, 0xffff0000);
-	}
+//	public void alert(String message){
+//		Toast toast = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT);
+//		toast.show();
+//	}
+//
+//	public void highlight(int x, int y){
+//		TextView view = ((TextView) this.boxView[y][x]);
+//		view.setShadowLayer(10.0f, 0.0f, 0.0f, 0xffff0000);
+//	}
+	
+	private Drawable LoadImageFromWebOperations(String url){
+ 		try {
+ 			InputStream is = (InputStream) new URL(url).getContent();
+ 			Drawable d = Drawable.createFromStream(is, "src name");
+ 			return d;
+ 		}
+ 		catch(Exception e){
+ 			e.printStackTrace();
+ 			return null;
+ 		}
+ 	}
 
 }

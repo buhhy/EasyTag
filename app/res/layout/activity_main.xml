@@ -1,99 +1,100 @@
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TableRow
-        android:id="@+id/tableRow1"
+    <LinearLayout
+        android:id="@+id/tagBar1"
         android:layout_width="match_parent"
-        android:minHeight="75dp" >
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
 
-        <TextView
-            android:id="@+id/box00"
-            android:layout_width="75dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="10pt"
-            android:text="tl" >
-        </TextView>
-        <TextView
-            android:id="@+id/box01"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="10pt"
-            android:text="t" >
-        </TextView>
-        <TextView
-            android:id="@+id/box02"
-            android:layout_width="75dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="10pt"
-            android:text="tr" >
-        </TextView>
+        <FrameLayout
+            android:id="@+id/tagLL12"
+            android:layout_width="0dp"
+            android:layout_height="75dp"
+            android:layout_weight="1" >
 
-    </TableRow>
+            <TextView
+                android:id="@+id/tag11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Tag 1" />
+        </FrameLayout>
 
-    <TableRow
-        android:id="@+id/tableRow2"
+        <FrameLayout
+            android:id="@+id/tagLL12"
+            android:layout_width="0dp"
+            android:layout_height="75dp"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/tag12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Tag 2" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/tagLL13"
+            android:layout_width="0dp"
+            android:layout_height="75dp"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/tag13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Tag 3" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/infoBar"
         android:layout_width="match_parent"
-        android:layout_weight="1" >
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" >
+    </LinearLayout>
 
-        <TextView
-            android:id="@+id/box10"
-            android:layout_width="75dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="10pt"
-            android:text="l" >
-        </TextView>
-
-        <ImageView
-            android:id="@+id/box11"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@android:drawable/gallery_thumb" />
-
-        <TextView
-            android:id="@+id/box12"
-            android:layout_width="75dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="10pt"
-            android:text="r" >
-        </TextView>
-    </TableRow>
-
-    <TableRow
-        android:id="@+id/tableRow3"
+    <ImageView
+        android:id="@+id/skipButton"
         android:layout_width="match_parent"
-        android:minHeight="75dp" >
+        android:layout_height="wrap_content"
+        android:layout_above="@id/infoBar"
+        android:visibility="invisible"
+        android:src="@android:drawable/ic_media_ff" />
 
-        <TextView
-            android:id="@+id/box20"
-            android:layout_width="75dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="10pt"
-            android:text="bl" >
-        </TextView>
-        <TextView
-            android:id="@+id/box21"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="10pt"
-            android:text="b" >
-        </TextView>
-        <TextView
-            android:id="@+id/box22"
-            android:layout_width="75dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="10pt"
-            android:text="br" >
-        </TextView>
-    </TableRow>
+    <ImageView
+        android:id="@+id/previousSet"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        android:src="@android:drawable/ic_media_previous" />
 
-</TableLayout>
+    <ImageView
+        android:id="@+id/nextSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        android:src="@android:drawable/ic_media_next" />
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@android:drawable/ic_menu_gallery" />
+
+</RelativeLayout>

@@ -41,14 +41,14 @@ public class Model {
 	
 	public void fetchImages(){
 		List<Image> list = this.getImageList();
-		list.add(new Image(1, "a"));
-		list.add(new Image(2, "b"));
-		list.add(new Image(3, "c"));
-		list.add(new Image(4, "d"));
-		list.add(new Image(5, "e"));
-		list.add(new Image(6, "f"));
-		list.add(new Image(7, "g"));
-		list.add(new Image(8, "h"));
+		list.add(new Image(1, "http://www.formorf.com/adad/wordpress/wp-content/uploads/2010/07/cell-mutation1.jpg"));
+		list.add(new Image(2, "http://fc01.deviantart.net/fs4/i/2004/230/2/f/Simple_Cell_Mutation.jpg"));
+		list.add(new Image(3, "http://www.1080p-wallpapers.com/images/3D-wallpapers/blue-neon-mushrooms-3d-image.jpg"));
+		list.add(new Image(4, "http://www.freegreatpicture.com/files/166/22526-bing-bing-wallpaper.jpg"));
+		list.add(new Image(5, "http://hssn-media.advance.net/OregonLive.com/news/f156376d356bbd9a3f14fa0d19d44371/bing.JPG"));
+		list.add(new Image(6, "http://farm3.staticflickr.com/2722/4426791707_05059d991e.jpg"));
+		list.add(new Image(7, "http://i2.cdn.turner.com/si/2012/olympics/2012/writers/sl_price/08/07/Liu-Xiang/Liu-Xiang-1.jpg"));
+		list.add(new Image(8, "http://static.guim.co.uk/sys-images/Sport/Pix/pictures/2012/8/7/1344334848032/Liu-Xiang--008.jpg"));
 		// TODO: add image fetching
 	}
 	

@@ -93,7 +93,7 @@ public class MainActivity extends Activity implements GestureListener {
 		
 		Model model = this.getModel();
 		model.fetchTags();
-//		model.fetchImages();
+		model.fetchImages();
 
 		this.dashboard = new View[3];
 		this.tagTexts = new TextView[3];
@@ -130,7 +130,7 @@ public class MainActivity extends Activity implements GestureListener {
 	
 	public void onUpdateImage(){
 		this.rerenderImage();
-	}
+	} 
 	
 	public void rerenderImage(){
 		Model model = this.getModel();

@@ -73,7 +73,7 @@ public class Model {
 		}
 	}
 
-	public void fetchImages(int amount){
+	public void fetchImages(){
 		//		List<Image> list = this.getImageList();
 		//		list.add(new Image(1, "http://www.formorf.com/adad/wordpress/wp-content/uploads/2010/07/cell-mutation1.jpg"));
 		//		list.add(new Image(2, "http://fc01.deviantart.net/fs4/i/2004/230/2/f/Simple_Cell_Mutation.jpg"));
@@ -83,27 +83,26 @@ public class Model {
 		//		list.add(new Image(6, "http://farm3.staticflickr.com/2722/4426791707_05059d991e.jpg"));
 		//		list.add(new Image(7, "http://i2.cdn.turner.com/si/2012/olympics/2012/writers/sl_price/08/07/Liu-Xiang/Liu-Xiang-1.jpg"));
 		//		list.add(new Image(8, "http://static.guim.co.uk/sys-images/Sport/Pix/pictures/2012/8/7/1344334848032/Liu-Xiang--008.jpg"));
-
 		try {
+			hc = new HttpController(this.listener); 
 			hc.caller = (new AsyncCallback(this) {
 				public Object call(String result) {
 					Model model = (Model) this.model;
 					List<StringMap<Object>> mapList = gson.fromJson(result, List.class);
 					for(StringMap<Object> s : mapList)
-						model.addImage(new Image(((Double) s.get("id")).intValue(), s.get("img_path").toString()));
-					return Tag.class;
+						model.addImage(new Image(((Double) s.get("id")).intValue(), s.get("name").toString()));
+					return Image.class;
 				}
 			});
-			for (int i = 0; i < amount; i++) {
-				hc.execute(new URL("http://sleepy-cove-3041.herokuapp.com/getNextContent/" + i + ".json"));
-			}
+			hc.execute(new URL("http://sleepy-cove-3041.herokuapp.com/contents.json"));
 		} catch (MalformedURLException exception) {
 			Log.e("test", exception.toString());
 		}
 	}
 	
-	public void tagImage(int contentId, int photoId){
+	public void tagImage(int contentId){
 		try {
+			hc = new HttpController(this.listener); 
 			hc.caller = (new AsyncCallback(this) {
 				public Object call(String result) {
 					Model model = (Model) this.model;
@@ -113,14 +112,13 @@ public class Model {
 					return Tag.class;
 				}
 			});
-			int tagIndex = this.currentTagSetIndex * Model.NUM_TAG_PER_PAGE;
+			int tagIndex = this.currentTagSetIndex * Model.NUM_TAG_PER_PAGE + contentId;
 			hc.execute(new URL("http://sleepy-cove-3041.herokuapp.com/tagPhoto/" + tagIndex + "/" + this.currentImageIndex));
 			Tag tag = tagList.get(tagIndex);
 			Log.d("save", tag.getName() + ": " + this.getCurrentImage().getImageUrl());
 		} catch (MalformedURLException exception) {
 			Log.e("test", exception.toString());
 		}		
-
 		// TODO: save tag-image link using currentImage and tag.getTagId()
 	}
 

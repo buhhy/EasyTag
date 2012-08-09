@@ -75,6 +75,7 @@ public class Model {
 	public void fetchImages(){
 		try {
 			HttpController hc = new HttpController(listener);
+			hc = new HttpController(this.listener); 
 			hc.caller = (new AsyncCallback(this) {
 				public Object call(String result) {
 					Model model = (Model) this.model;
@@ -102,7 +103,7 @@ public class Model {
 					return Tag.class;
 				}
 			});
-			int tagIndex = this.currentTagSetIndex * Model.NUM_TAG_PER_PAGE;
+			int tagIndex = this.currentTagSetIndex * Model.NUM_TAG_PER_PAGE + contentId;
 			hc.execute(new URL("http://sleepy-cove-3041.herokuapp.com/tagPhoto/" + tagIndex + "/" + this.currentImageIndex));
 			Tag tag = tagList.get(tagIndex);
 			Log.d("save", tag.getName() + ": " + this.getCurrentImage().getImageUrl());

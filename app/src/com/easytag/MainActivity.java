@@ -138,7 +138,7 @@ public class MainActivity extends Activity implements GestureListener {
 	public void onUpdateImage(){
 		this.rerenderImage();
 	}
-
+	
 	public void rerenderImage(){
 		Model model = this.getModel();
 		Image currentImage = model.getCurrentImage();

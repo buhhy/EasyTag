@@ -29,15 +29,9 @@ public class MainActivity extends Activity implements GestureListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		HttpController hc = new HttpController();
-		try {
-			hc.execute(new URL("http://www.teamliquid.net"));
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		this.tagModel = new Model();
+		this.tagModel.fetchTags();
 		this.boxView = new View[3][3];
 		
 		this.boxView[0][0] = this.findViewById(R.id.box00);

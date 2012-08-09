@@ -1,17 +1,36 @@
 package com.easytag.model;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import android.util.Log;
+
+import com.easytag.HttpController;
+import com.easytag.helper.AsyncCallback;
+import com.easytag.helper.JSONHelper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class Model {
 	
 	public static final int NUM_TAG_PER_PAGE = 3;
-	
+
 	private List<Image> imageList;
 	private List<Tag> tagList;
 	
 	private int currentImage = 0;
 	private int currentTagSet = 0;
+
+	private HttpController hc = new HttpController();
+	private JSONHelper jh = new JSONHelper();
+	public Gson gson;
+
+	public Model() {
+        gson = new Gson();
+	}
 	
 	public List<Image> getImageList(){
 		if(this.imageList == null)
@@ -24,13 +43,45 @@ public class Model {
 			this.tagList = new LinkedList<Tag>();
 		return this.tagList;
 	}
-	
-	public void fetchTags(){
-		// TODO: add tag fetching
+
+	public void fetchTags() {
+		String result = "";
+		try {
+			hc.caller = (new AsyncCallback() {
+				   public void call(String result) {
+					   Log.v("test", "]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] i hate my life 111111 ");
+					   tagList = gson.fromJson(result, List.class);
+					   for (Tag t : tagList) {
+						   Log.v("test", "]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] " + t.getName());
+					   }
+					   //{"created_at":"2012-08-09T07:51:19Z","id":1,"name":"Awesome","updated_at":"2012-08-09T07:51:19Z"}
+				   }
+				});
+			hc.execute(new URL("http://sleepy-cove-3041.herokuapp.com/tags.json")); //Need to know the correct GET request
+			Log.v("test", "=============================" + result);
+		} catch (MalformedURLException exception) {
+			Log.e("test", exception.toString());
+		}
+		
+		//Need to know how tagged results are returned
 	}
 	
 	public void fetchImages(){
-		// TODO: add image fetching
+		String result = "";
+		try {
+			hc.execute(new URL("http://sleepy-cove-3041.herokuapp.com/content-tagss/tag/2/content/3.json"));;
+			result = hc.get();
+		} catch (MalformedURLException exception) {
+			Log.e("test", exception.toString());
+		} catch (InterruptedException exception) {
+			Log.e("test", exception.toString());
+		} catch (ExecutionException exception) {
+			Log.e("test", exception.toString());
+		}
+	}
+	
+	public void processImages(String result) {
+		
 	}
 	
 	public void tagImage(int tagIndex){
